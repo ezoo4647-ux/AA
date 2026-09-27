@@ -68,7 +68,6 @@
         input[type="tel"],
         input[type="email"],
         input[type="number"],
-        input[type="file"],
         select {
             width: 100%;
             padding: 10px 14px;
@@ -83,7 +82,6 @@
         input[type="tel"]:focus,
         input[type="email"]:focus,
         input[type="number"]:focus,
-        input[type="file"]:focus,
         select:focus {
             border-color: #0088cc;
         }
@@ -107,6 +105,17 @@
         .payment-box p {
             margin-bottom: 6px;
             line-height: 1.6;
+        }
+
+        .whatsapp-note {
+            background-color: #e1f5fe;
+            border-right: 4px solid #0088cc;
+            padding: 10px 12px;
+            font-size: 13px;
+            color: #01579b;
+            margin-bottom: 18px;
+            border-radius: 4px;
+            line-height: 1.5;
         }
 
         .row {
@@ -156,7 +165,7 @@
         </div>
 
         <!-- نموذج التسجيل -->
-        <form id="registrationForm" action="https://formspree.io/f/myezbokd" method="POST" enctype="multipart/form-data">
+        <form id="registrationForm" action="https://formspree.io/f/myezbokd" method="POST">
             
             <!-- معلومات الدفع -->
             <div class="payment-box">
@@ -212,13 +221,18 @@
                 </select>
             </div>
 
-            <!-- إرفاق إيصال الدفع -->
+            <!-- إدخال رقم العملية -->
             <div class="form-group">
-                <label for="receipt">إرفاق إيصال الدفع (صورة أو ملف) <span style="color:red;">*</span></label>
-                <input type="file" id="receipt" name="إيصال_الدفع" accept="image/*,.pdf" required>
+                <label for="operation-number">رقم العملية (إيصال التحويل) <span style="color:red;">*</span></label>
+                <input type="text" id="operation-number" name="رقم_العملية" placeholder="أدخل رقم العملية من إيصال الدفع" required>
             </div>
 
-            <button type="submit" class="submit-btn">إرسال البيانات وإشعار الإدارة</button>
+            <!-- ملاحظة إرسال الإشعار على الواتساب -->
+            <div class="whatsapp-note">
+                📌 <strong>ملاحظة هامة:</strong> يرجى إرسال إشعار أو صورة الإيصال على الواتساب: <strong>+249991741240</strong> لتأكيد التسجيل.
+            </div>
+
+            <button type="submit" class="submit-btn">إرسال البيانات</button>
         </form>
 
         <!-- اسم الإدارة في أسفل الصفحة -->
@@ -229,9 +243,6 @@
 
     <script>
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
-            // ملاحظة: سيتم إرسال البيانات والصورة بشكل طبيعي إلى إيميلك عبر Formspree
-            // وهنا نقوم تجهيز رسالة الواتساب لتنبيه الإدارة
-            
             const myPhoneNumber = "249991741240"; 
 
             const fullname = document.getElementById('fullname').value;
@@ -240,6 +251,7 @@
             const age = document.getElementById('age').value;
             const gender = document.getElementById('gender').value;
             const academicLevel = document.getElementById('academic-level').value;
+            const operationNumber = document.getElementById('operation-number').value;
 
             // صياغة الرسالة النصية للواتساب
             const message = `*استمارة تسجيل جديدة - مركز أورسيتي للتدريب*%0A%0A` +
@@ -250,11 +262,11 @@
                             `🚻 *الجنس:* ${gender}%0A` +
                             `🎓 *المستوى التعليمي:* ${academicLevel}%0A` +
                             `💰 *رسوم التسجيل:* 10,000 جنيه سوداني%0A` +
-                            `🧾 *إيصال الدفع:* تم إرفاقه (يرجى مراجعة البريد الإلكتروني)`;
+                            `🔢 *رقم العملية:* ${operationNumber}`;
 
             const whatsappUrl = `https://wa.me/${myPhoneNumber}?text=${message}`;
             
-            // فتح الواتساب في علامة تبويب جديدة بعد ثانية ليتمكن Formspree من استقبال الملف
+            // فتح الواتساب تلقائياً بعد إرسال الفورم
             setTimeout(function() {
                 window.open(whatsappUrl, '_blank');
             }, 1000);
